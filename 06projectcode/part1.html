@@ -1,0 +1,757 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>私のブログとポートフォリオ</title>
+<style>
+:root {
+  --bg:#fefae0;
+  --bg2:#faedcd;
+  --card:#ffffff;
+  --text:#302b28;
+  --muted:#75675f;
+  --border:#e9edc9;
+  --button:#eff6ff;
+  --button-border:#bfdbfe;
+}
+body.dark {
+  --bg:#1c1917;
+  --bg2:#292524;
+  --card:#302b28;
+  --text:#f5f5f4;
+  --muted:#d6d3d1;
+  --border:#44403c;
+  --button:#334155;
+  --button-border:#475569;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  font-family:"Yu Gothic","Meiryo",sans-serif;
+  background:linear-gradient(135deg,var(--bg),var(--bg2));
+  background-attachment:fixed;
+  color:var(--text);
+  line-height:1.8;
+  min-height:100vh;
+}
+button,input,select,textarea {font:inherit}
+button {cursor:pointer}
+header {
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:var(--card);
+  border-bottom:2px dashed var(--border);
+}
+nav {
+  max-width:1100px;
+  margin:auto;
+  padding:15px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  flex-wrap:wrap;
+}
+.logo {font-size:22px;font-weight:bold}
+.menu {display:flex;gap:10px;flex-wrap:wrap}
+.menu button {
+  background:transparent;
+  color:var(--text);
+  border:0;
+  border-radius:10px;
+  padding:7px 12px;
+}
+.menu button:hover,.menu button.active {
+  background:var(--button);
+}
+main {max-width:1100px;margin:30px auto;padding:0 20px}
+section.page {display:none}
+section.page.active {display:block}
+.card {
+  background:var(--card);
+  border:2px dashed var(--border);
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:25px;
+  box-shadow:0 6px 18px #0000000a;
+}
+.hero {padding:45px 30px}
+.hero h1 {font-size:clamp(25px,4vw,42px);line-height:1.5}
+p {color:var(--muted)}
+.badge,.tag {
+  display:inline-block;
+  background:var(--button);
+  color:var(--text);
+  border:1px solid var(--button-border);
+  border-radius:15px;
+  padding:3px 12px;
+  margin:4px;
+  font-size:14px;
+}
+.btn {
+  background:var(--button);
+  color:var(--text);
+  border:2px solid var(--button-border);
+  padding:9px 18px;
+  border-radius:12px;
+  margin:4px;
+  font-weight:bold;
+}
+.btn:hover {opacity:.8;transform:translateY(-1px)}
+.danger {background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+.stat {text-align:center}
+.stat strong {font-size:32px;display:block}
+.post {
+  background:var(--card);
+  border:2px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+}
+.post img {
+  width:100%;
+  height:190px;
+  object-fit:cover;
+  cursor:pointer;
+}
+.post-content {padding:20px}
+.post h3 {cursor:pointer;margin:10px 0}
+.post h3:hover {text-decoration:underline}
+.post-actions {
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  border-top:1px dashed var(--border);
+  padding-top:12px;
+}
+input,select,textarea {
+  width:100%;
+  padding:12px;
+  border:2px solid var(--border);
+  border-radius:12px;
+  background:var(--card);
+  color:var(--text);
+}
+label {display:block;font-weight:bold;margin:12px 0 5px}
+textarea {resize:vertical}
+.controls {display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}
+.controls input {flex:2;min-width:200px}
+.controls select {flex:1;min-width:150px}
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#0009;
+  padding:20px;
+  align-items:center;
+  justify-content:center;
+}
+.modal.active {display:flex}
+.modal-box {
+  width:100%;
+  max-width:750px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:var(--card);
+  color:var(--text);
+  padding:25px;
+  border-radius:18px;
+}
+.modal-box img {
+  width:100%;
+  max-height:280px;
+  object-fit:cover;
+  border-radius:12px;
+}
+.article-body {white-space:pre-line;margin:20px 0}
+.comment {
+  padding:12px;
+  margin:10px 0;
+  background:var(--button);
+  border-radius:10px;
+}
+footer {text-align:center;padding:30px;color:var(--muted)}
+#notice {
+  display:none;
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:#333;
+  color:white;
+  padding:12px 20px;
+  border-radius:12px;
+  z-index:200;
+}
+@media(max-width:600px) {
+  nav {justify-content:center}
+  .hero {padding:25px 18px}
+  .card {padding:18px}
+  .menu {justify-content:center}
+}
+</style>
+</head>
+
+<body>
+<header>
+<nav>
+  <div class="logo">👨‍💻 私のブログ</div>
+  <div class="menu">
+    <button class="active" onclick="showPage('home',this)">ホーム</button>
+    <button onclick="showPage('blog',this)">ブログ</button>
+    <button onclick="showPage('projects',this)">作品</button>
+    <button onclick="showPage('about',this)">自己紹介</button>
+    <button onclick="changeTheme()" id="themeBtn">🌙 夜モード</button>
+  </div>
+</nav>
+</header>
+
+<main>
+<!-- ホーム -->
+<section id="home" class="page active">
+  <div class="card hero">
+    <span class="badge">👋 私のブログへようこそ！</span>
+    <h1>こんにちは！<br>私の好きなことを紹介します。</h1>
+    <p>
+      このブログでは、プログラミング、旅行、
+      食べ物、ゲームについて書いています。
+      私が勉強したことや、毎日の生活で
+      見つけたことを紹介します。
+    </p>
+    <div>
+      <span class="tag">💻 プログラミング</span>
+      <span class="tag">✈️ 旅行</span>
+      <span class="tag">🍜 食べ物</span>
+      <span class="tag">🎮 ゲーム</span>
+    </div>
+    <br>
+    <button class="btn" onclick="showPage('blog')">📖 記事を読む</button>
+    <button class="btn" onclick="showPage('projects')">📂 作品を見る</button>
+  </div>
+
+  <div class="grid">
+    <div class="card stat">
+      <strong id="totalPosts">0</strong>
+      <p>記事の数</p>
+    </div>
+    <div class="card stat">
+      <strong id="totalSaved">0</strong>
+      <p>保存した記事</p>
+    </div>
+    <div class="card stat">
+      <strong id="totalLikes">0</strong>
+      <p>いいねの数</p>
+    </div>
+  </div>
+
+  <h2>📝 新しい記事</h2>
+  <div id="recentPosts" class="grid"></div>
+</section>
+
+<!-- ブログ -->
+<section id="blog" class="page">
+  <h1>📖 私のブログ</h1>
+  <p>旅行やITについて、いろいろな記事を書いています。</p>
+  <button class="btn" onclick="toggleForm()">＋ 新しい記事を書く</button>
+  <button class="btn" onclick="backupData()">💾 データを保存</button>
+
+  <div class="card" id="postFormBox" style="display:none;margin-top:20px">
+    <h2>新しい記事を書く</h2>
+    <form id="postForm">
+      <label for="postTitle">記事のタイトル</label>
+      <input id="postTitle" placeholder="例：京都へ旅行に行きました" required>
+
+      <label for="postCategory">カテゴリー</label>
+      <select id="postCategory">
+        <option value="Travel">旅行</option>
+        <option value="Food">食べ物</option>
+        <option value="Gaming">ゲーム</option>
+        <option value="Technology">IT・技術</option>
+        <option value="React">React</option>
+        <option value="JavaScript">JavaScript</option>
+        <option value="CSS/Design">デザイン</option>
+      </select>
+
+      <label for="postImage">写真のURL</label>
+      <input id="postImage" type="url" placeholder="https://...">
+
+      <label for="postTags">タグ（コンマで分けてください）</label>
+      <input id="postTags" placeholder="旅行,日本,東京">
+
+      <label for="postExcerpt">短い説明</label>
+      <input id="postExcerpt" placeholder="記事について短く書いてください" required>
+
+      <label for="postContent">記事の内容</label>
+      <textarea id="postContent" rows="7" placeholder="ここに記事を書いてください。" required></textarea>
+      <p id="wordCounter">0文字</p>
+
+      <label>
+        <input type="checkbox" id="postPinned" style="width:auto">
+        📌 この記事を上に表示する
+      </label>
+      <br>
+      <button class="btn" type="submit">記事を公開する</button>
+      <button class="btn" type="button" onclick="toggleForm()">キャンセル</button>
+    </form>
+  </div>
+
+  <div class="controls">
+    <input id="searchInput" placeholder="🔍 記事やタグを探す">
+    <select id="categoryFilter">
+      <option value="All">すべて</option>
+      <option value="Travel">旅行</option>
+      <option value="Food">食べ物</option>
+      <option value="Gaming">ゲーム</option>
+      <option value="Technology">IT・技術</option>
+      <option value="React">React</option>
+      <option value="JavaScript">JavaScript</option>
+      <option value="CSS/Design">デザイン</option>
+    </select>
+    <select id="sortSelect">
+      <option value="newest">新しい順</option>
+      <option value="oldest">古い順</option>
+      <option value="likes">いいねが多い順</option>
+    </select>
+    <button class="btn" id="savedBtn" onclick="toggleSaved()">🔖 保存した記事だけ</button>
+  </div>
+
+  <div id="blogPosts" class="grid"></div>
+</section>
+
+<!-- 作品 -->
+<section id="projects" class="page">
+  <h1>💻 私の作品</h1>
+  <p>私が勉強しながら作ったウェブサイトを紹介します。</p>
+  <div class="grid">
+    <div class="card">
+      <span class="badge">ウェブサイト</span>
+      <h2>ブログとポートフォリオ</h2>
+      <p>
+        HTML、CSS、JavaScriptを使って作りました。
+        記事を書いたり、保存したりできます。
+        コメントを書くこともできます。
+      </p>
+      <p>使用した技術：HTML / CSS / JavaScript</p>
+      <button class="btn" onclick="showPage('blog')">作品を見る</button>
+    </div>
+    <div class="card">
+      <span class="badge">React</span>
+      <h2>UIコンポーネント</h2>
+      <p>
+        Reactを使って、ボタンやカードなどを作りました。
+        使いやすいデザインを勉強しています。
+      </p>
+      <p>使用した技術：React / CSS</p>
+    </div>
+  </div>
+</section>
+
+<!-- 自己紹介 -->
+<section id="about" class="page">
+  <div class="card hero">
+    <h1>👋 自己紹介</h1>
+    <h2>こんにちは！Avinashです。</h2>
+    <p>
+      私はウェブ開発に興味があります。
+      今、HTML、CSS、JavaScript、Reactなどを
+      勉強しています。
+    </p>
+    <p>
+      新しい技術を勉強することが好きです。
+      将来は日本でITエンジニアとして働きたいです。
+      使いやすくて、きれいなウェブサイトを
+      作れるようになりたいです。
+    </p>
+    <h3>私の好きなこと</h3>
+    <span class="tag">💻 プログラミング</span>
+    <span class="tag">✈️ 旅行</span>
+    <span class="tag">📚 勉強</span>
+    <span class="tag">🍜 食べ物</span>
+    <h3>勉強している技術</h3>
+    <span class="tag">HTML</span>
+    <span class="tag">CSS</span>
+    <span class="tag">JavaScript</span>
+    <span class="tag">React</span>
+  </div>
+</section>
+</main>
+
+<!-- 記事を読む画面 -->
+<div id="articleModal" class="modal">
+  <div class="modal-box">
+    <button class="btn" onclick="closeArticle()">✕ 閉じる</button>
+    <div id="articleDetails"></div>
+    <hr>
+    <button class="btn" onclick="likeArticle()">❤️ いいね <span id="modalLikes">0</span></button>
+    <button class="btn" onclick="shareArticle()">🔗 記事をシェア</button>
+    <h3>💬 コメント</h3>
+    <div id="commentsList"></div>
+    <form id="commentForm">
+      <label for="commentName">名前</label>
+      <input id="commentName" placeholder="名前を書いてください" required>
+      <label for="commentText">コメント</label>
+      <textarea id="commentText" rows="3" placeholder="コメントを書いてください" required></textarea>
+      <button class="btn" type="submit">コメントを送る</button>
+    </form>
+  </div>
+</div>
+
+<div id="notice"></div>
+<footer>© 2026 Avinash | 私のブログとポートフォリオ</footer>
+
+<script>
+const categoryNames = {
+  Travel:"旅行",
+  Food:"食べ物",
+  Gaming:"ゲーム",
+  Technology:"IT・技術",
+  React:"React",
+  JavaScript:"JavaScript",
+  "CSS/Design":"デザイン"
+};
+
+const defaultPosts = [
+  {
+    id:1,
+    title:"東京のおいしいラーメン屋",
+    category:"Food",
+    image:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800",
+    date:"2026/10/24",
+    excerpt:"東京でおいしいラーメンを食べました。おすすめのお店を紹介します。",
+    content:"東京にはたくさんのラーメン屋があります。\n\n私はラーメンが大好きです。新宿でおいしいラーメンを食べました。\n\nスープはとてもおいしくて、めんもよかったです。\n\nみなさんも東京へ来たら、ぜひラーメンを食べてみてください。",
+    tags:["東京","ラーメン","食べ物"],
+    likes:24,
+    pinned:true,
+    comments:[{author:"Kenji",date:"2026/10/25",text:"とてもおいしそうですね！"}]
+  },
+  {
+    id:2,
+    title:"富士山と河口湖へ旅行",
+    category:"Travel",
+    image:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800",
+    date:"2026/10/20",
+    excerpt:"富士山の近くへ行きました。きれいな景色と旅行の思い出を紹介します。",
+    content:"日本にはきれいな場所がたくさんあります。\n\n河口湖から富士山を見ることができます。\n\n秋は木の葉が赤や黄色になります。\n\n自転車に乗ったり、写真を撮ったりして、楽しい時間を過ごせます。",
+    tags:["旅行","富士山","自然"],
+    likes:19,
+    pinned:false,
+    comments:[]
+  },
+  {
+    id:3,
+    title:"私のゲーム用パソコン",
+    category:"Gaming",
+    image:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800",
+    date:"2026/10/15",
+    excerpt:"ゲームを楽しむために、パソコンや机の使い方を紹介します。",
+    content:"私はゲームとパソコンが好きです。\n\n大きいモニターと使いやすいキーボードがあると便利です。\n\n机の上をきれいにすると、勉強もゲームもしやすくなります。",
+    tags:["ゲーム","パソコン"],
+    likes:31,
+    pinned:false,
+    comments:[]
+  },
+  {
+    id:4,
+    title:"AIとウェブ開発について",
+    category:"Technology",
+    image:"https://images.unsplash.com/photo-1518770660439-4636190af475?w=800",
+    date:"2026/10/12",
+    excerpt:"AIを使うと、プログラミングの勉強や仕事が便利になります。",
+    content:"今、AIはとても便利な技術です。\n\nAIを使ってコードを考えたり、問題を見つけたりできます。\n\nでも、自分でプログラミングを理解することも大切です。\n\n私はAIとウェブ開発について、もっと勉強したいです。",
+    tags:["AI","IT","プログラミング"],
+    likes:22,
+    pinned:false,
+    comments:[]
+  },
+  {
+    id:5,
+    title:"React Hooksを勉強しました",
+    category:"React",
+    image:"https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800",
+    date:"2026/10/10",
+    excerpt:"React Hooksの基本と使い方について、簡単に説明します。",
+    content:"Reactはウェブサイトを作るための便利な技術です。\n\nuseStateを使うと、画面のデータを変えることができます。\n\nuseEffectは、データが変わったときなどに処理を行うために使います。\n\n毎日少しずつ練習しています。",
+    tags:["React","JavaScript","勉強"],
+    likes:14,
+    pinned:false,
+    comments:[]
+  }
+];
+
+const POSTS_KEY = "avinash_blog_posts_v2";
+const SAVED_KEY = "avinash_blog_saved";
+
+function readStorage(key,fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return Array.isArray(value) ? value : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+let posts = readStorage(POSTS_KEY,defaultPosts);
+let bookmarks = readStorage(SAVED_KEY,[]);
+let savedOnly = false;
+let currentArticleId = null;
+
+function savePosts() {
+  localStorage.setItem(POSTS_KEY,JSON.stringify(posts));
+}
+function saveBookmarks() {
+  localStorage.setItem(SAVED_KEY,JSON.stringify(bookmarks));
+}
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g,ch=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  })[ch]);
+}
+function notify(message) {
+  const box=document.getElementById("notice");
+  box.textContent=message;
+  box.style.display="block";
+  clearTimeout(notify.timer);
+  notify.timer=setTimeout(()=>box.style.display="none",2500);
+}
+function showPage(name,button) {
+  document.querySelectorAll(".page").forEach(page=>{
+    page.classList.toggle("active",page.id===name);
+  });
+  document.querySelectorAll(".menu button").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+  const names=["home","blog","projects","about"];
+  const index=names.indexOf(name);
+  if(index>=0) {
+    document.querySelectorAll(".menu button")[index].classList.add("active");
+  }
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function changeTheme() {
+  document.body.classList.toggle("dark");
+  const dark=document.body.classList.contains("dark");
+  document.getElementById("themeBtn").textContent=
+    dark?"☀️ 昼モード":"🌙 夜モード";
+}
+function toggleForm() {
+  const box=document.getElementById("postFormBox");
+  box.style.display=box.style.display==="none"?"block":"none";
+}
+function updateStats() {
+  document.getElementById("totalPosts").textContent=posts.length;
+  document.getElementById("totalSaved").textContent=bookmarks.length;
+  document.getElementById("totalLikes").textContent=
+    posts.reduce((sum,p)=>sum+(p.likes||0),0);
+}
+function postCard(post) {
+  const saved=bookmarks.includes(post.id);
+  return `
+    <article class="post">
+      <img src="${escapeHTML(post.image)}"
+        alt="${escapeHTML(post.title)}"
+        onclick="openArticle(${post.id})">
+      <div class="post-content">
+        ${post.pinned?'<span class="badge">📌 おすすめ</span>':""}
+        <span class="badge">${escapeHTML(categoryNames[post.category]||post.category)}</span>
+        <small>${escapeHTML(post.date)}</small>
+        <h3 onclick="openArticle(${post.id})">${escapeHTML(post.title)}</h3>
+        <p>${escapeHTML(post.excerpt)}</p>
+        <div>${(post.tags||[]).map(tag=>
+          `<span class="tag">#${escapeHTML(tag)}</span>`
+        ).join("")}</div>
+        <div class="post-actions">
+          <button class="btn" onclick="openArticle(${post.id})">読む</button>
+          <button class="btn" onclick="toggleBookmark(${post.id})">
+            ${saved?"🔖 保存中":"🔖 保存"}
+          </button>
+          <span>❤️ ${post.likes||0}</span>
+          ${post.id>5?`<button class="btn danger" onclick="deletePost(${post.id})">削除</button>`:""}
+        </div>
+      </div>
+    </article>`;
+}
+function render() {
+  updateStats();
+  document.getElementById("recentPosts").innerHTML=
+    [...posts].sort((a,b)=>b.id-a.id).slice(0,2).map(postCard).join("");
+
+  const search=document.getElementById("searchInput").value.toLowerCase();
+  const category=document.getElementById("categoryFilter").value;
+  const sort=document.getElementById("sortSelect").value;
+
+  let filtered=posts.filter(p=>{
+    const matchCategory=category==="All"||p.category===category;
+    const matchSaved=!savedOnly||bookmarks.includes(p.id);
+    const searchable=[p.title,p.excerpt,...(p.tags||[])].join(" ").toLowerCase();
+    return matchCategory&&matchSaved&&searchable.includes(search);
+  });
+
+  filtered.sort((a,b)=>{
+    if(a.pinned!==b.pinned)return a.pinned?-1:1;
+    if(sort==="oldest")return a.id-b.id;
+    if(sort==="likes")return (b.likes||0)-(a.likes||0);
+    return b.id-a.id;
+  });
+
+  document.getElementById("blogPosts").innerHTML=
+    filtered.length?filtered.map(postCard).join(""):
+    "<p>記事が見つかりませんでした。</p>";
+}
+function toggleSaved() {
+  savedOnly=!savedOnly;
+  document.getElementById("savedBtn").textContent=
+    savedOnly?"🔖 すべての記事を見る":"🔖 保存した記事だけ";
+  render();
+}
+function toggleBookmark(id) {
+  if(bookmarks.includes(id)) {
+    bookmarks=bookmarks.filter(item=>item!==id);
+    notify("保存をやめました。");
+  } else {
+    bookmarks.push(id);
+    notify("記事を保存しました！");
+  }
+  saveBookmarks();
+  render();
+}
+function deletePost(id) {
+  if(!confirm("この記事を削除しますか？"))return;
+  posts=posts.filter(p=>p.id!==id);
+  bookmarks=bookmarks.filter(item=>item!==id);
+  savePosts();
+  saveBookmarks();
+  render();
+  notify("記事を削除しました。");
+}
+function openArticle(id) {
+  const post=posts.find(p=>p.id===id);
+  if(!post)return;
+  currentArticleId=id;
+  document.getElementById("articleDetails").innerHTML=`
+    <h1>${escapeHTML(post.title)}</h1>
+    <p>${escapeHTML(post.date)} ・ ${escapeHTML(categoryNames[post.category]||post.category)}</p>
+    <img src="${escapeHTML(post.image)}" alt="${escapeHTML(post.title)}">
+    <div class="article-body">${escapeHTML(post.content)}</div>
+  `;
+  document.getElementById("modalLikes").textContent=post.likes||0;
+  renderComments(post);
+  document.getElementById("articleModal").classList.add("active");
+}
+function closeArticle() {
+  document.getElementById("articleModal").classList.remove("active");
+  currentArticleId=null;
+}
+function likeArticle() {
+  const post=posts.find(p=>p.id===currentArticleId);
+  if(!post)return;
+  post.likes=(post.likes||0)+1;
+  savePosts();
+  document.getElementById("modalLikes").textContent=post.likes;
+  render();
+  notify("いいね！ありがとうございます ❤️");
+}
+function renderComments(post) {
+  const comments=post.comments||[];
+  document.getElementById("commentsList").innerHTML=
+    comments.length?comments.map(c=>`
+      <div class="comment">
+        <strong>${escapeHTML(c.author)}</strong>
+        <small>${escapeHTML(c.date)}</small>
+        <div>${escapeHTML(c.text)}</div>
+      </div>
+    `).join(""):"<p>まだコメントがありません。</p>";
+}
+function shareArticle() {
+  const post=posts.find(p=>p.id===currentArticleId);
+  if(!post)return;
+  const text=post.title+" - "+location.href;
+  if(navigator.clipboard&&window.isSecureContext) {
+    navigator.clipboard.writeText(text)
+      .then(()=>notify("記事の情報をコピーしました！"))
+      .catch(()=>notify("コピーできませんでした。"));
+  } else {
+    notify("このブラウザではコピーできません。");
+  }
+}
+function backupData() {
+  const data={posts,bookmarks};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
+  link.href=url;
+  link.download="blog-backup.json";
+  link.click();
+  URL.revokeObjectURL(url);
+  notify("データを保存しました！");
+}
+
+document.getElementById("postForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  const title=document.getElementById("postTitle").value.trim();
+  const category=document.getElementById("postCategory").value;
+  const image=document.getElementById("postImage").value.trim();
+  const excerpt=document.getElementById("postExcerpt").value.trim();
+  const content=document.getElementById("postContent").value.trim();
+  const tags=document.getElementById("postTags").value
+    .split(",").map(t=>t.trim()).filter(Boolean);
+  if(!title||!excerpt||!content)return;
+  posts.unshift({
+    id:Date.now(),
+    title,category,
+    image:image||"https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800",
+    date:new Date().toLocaleDateString("ja-JP"),
+    excerpt,content,tags,
+    likes:0,
+    pinned:document.getElementById("postPinned").checked,
+    comments:[]
+  });
+  savePosts();
+  this.reset();
+  toggleForm();
+  render();
+  notify("新しい記事を公開しました！");
+});
+document.getElementById("commentForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  const post=posts.find(p=>p.id===currentArticleId);
+  if(!post)return;
+  const author=document.getElementById("commentName").value.trim();
+  const text=document.getElementById("commentText").value.trim();
+  if(!author||!text)return;
+  post.comments=post.comments||[];
+  post.comments.push({
+    author,text,
+    date:new Date().toLocaleDateString("ja-JP")
+  });
+  savePosts();
+  renderComments(post);
+  this.reset();
+  notify("コメントを送りました！");
+});
+document.getElementById("postContent").addEventListener("input",function(){
+  document.getElementById("wordCounter").textContent=
+    this.value.length+"文字";
+});
+["searchInput","categoryFilter","sortSelect"].forEach(id=>{
+  document.getElementById(id).addEventListener(
+    id==="searchInput"?"input":"change",render
+  );
+});
+document.getElementById("articleModal").addEventListener("click",function(e){
+  if(e.target===this)closeArticle();
+});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape")closeArticle();
+});
+render();
+</script>
+</body>
+</html>

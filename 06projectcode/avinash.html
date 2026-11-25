@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog & Portfolio</title>
+  
+  <!-- Casual Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,400&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+  <style>
+    /* CSS Variables for Warm Casual Theme */
+    :root {
+      --font-heading: 'Patrick Hand', cursive, sans-serif;
+      --font-body: 'Comic Neue', cursive, sans-serif;
+
+      --bg-gradient-start: #fefae0;
+      --bg-gradient-end: #faedcd;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: #e9edc9;
+      --modal-bg: #ffffff;
+
+      --text-primary: #2c2523;       /* Charcoal Grey */
+      --text-secondary: #7d6b63;     /* Taupe Brown */
+      --text-muted: #9c8a82;
+
+      --btn-bg: #eff6ff;             /* Light Blue */
+      --btn-border: #bfdbfe;
+      --btn-text: #2c2523;
+      --btn-hover-bg: #dbeafe;
+
+      --accent-badge-bg: #fef3c7;
+      --accent-badge-text: #7d6b63;
+
+      --shadow-sm: 0 4px 10px rgba(44, 37, 35, 0.05);
+      --shadow-md: 0 8px 20px rgba(44, 37, 35, 0.08);
+      --radius: 18px;
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient-start: #1c1917;
+      --bg-gradient-end: #292524;
+      --card-bg: rgba(44, 40, 37, 0.9);
+      --card-border: #44403c;
+      --modal-bg: #292524;
+
+      --text-primary: #f5f5f4;
+      --text-secondary: #d6d3d1;
+      --text-muted: #a8a29e;
+
+      --btn-bg: #1e293b;
+      --btn-border: #334155;
+      --btn-text: #f5f5f4;
+      --btn-hover-bg: #334155;
+
+      --accent-badge-bg: #44403c;
+      --accent-badge-text: #e7e5e4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 1.15rem;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      background-attachment: fixed;
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, h4, h5, h6, .font-heading {
+      font-family: var(--font-heading);
+      letter-spacing: 0.5px;
+    }
+
+    /* Fixed Top Navbar Fix */
+    .navbar-header {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 2px dashed var(--card-border);
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .navbar-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .navbar-logo {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 1.25rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--text-primary);
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+    }
+
+    .theme-toggle-btn {
+      background: none;
+      border: 2px solid var(--card-border);
+      color: var(--text-primary);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--btn-bg);
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .nav-toggle .bar {
+      width: 26px;
+      height: 3px;
+      background-color: var(--text-primary);
+      border-radius: 2px;
+    }
+
+    /* Main Content Wrapper */
+    main {
+      max-width: 1100px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .view-section {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero Section */
+    .hero-card {
+      background: var(--card-bg);
+      border: 2px dashed var(--card-border);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--accent-badge-bg);
+      color: var(--accent-badge-text);
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-description {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 750px;
+      margin-bottom: 1.5rem;
+    }
+
+    .tech-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tech-chip {
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      color: var(--text-primary);
+      padding: 0.2rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+
+    /* Button Styling */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      padding: 0.55rem 1.25rem;
+      border-radius: 14px;
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid var(--btn-border);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn:hover {
+      background: var(--btn-hover-bg);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid var(--card-border);
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fca5a5;
+    }
+
+    .btn-danger:hover {
+      background: #fca5a5;
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.8rem;
+      font-size: 1.05rem;
+    }
+
+    /* Summary Bar */
+    .summary-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 2px dashed var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      color: var(--text-primary);
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+
+    /* Controls Bar */
+    .controls-wrapper {
+      background: var(--card-bg);
+      border: 2px dashed var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .controls-wrapper {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .search-box {
+      flex: 1;
+      max-width: 380px;
+    }
+
+    .search-input, .select-input, .form-control {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border: 2px solid var(--card-border);
+      background: var(--modal-bg);
+      color: var(--text-primary);
+      border-radius: 14px;
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      outline: none;
+    }
+
+    .search-input:focus, .select-input:focus, .form-control:focus {
+      border-color: var(--btn-border);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-secondary);
+      padding: 0.35rem 0.85rem;
+      border-radius: 12px;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--btn-bg);
+      color: var(--text-primary);
+      border-color: var(--btn-border);
+    }
+
+    /* Posts Grid & Cards */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .post-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .post-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .post-card.pinned {
+      border-color: #f59e0b;
+      background: linear-gradient(180deg, rgba(254, 243, 199, 0.4), var(--card-bg));
+    }
+
+    .pin-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #f59e0b;
+      color: #ffffff;
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 10px;
+      z-index: 2;
+    }
+
+    .card-cover-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 2px solid var(--card-border);
+    }
+
+    .card-body-content {
+      padding: 1.25rem 1.25rem 0.5rem;
+    }
+
+    .post-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+
+    .post-meta {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .category-badge {
+      background: var(--accent-badge-bg);
+      color: var(--accent-badge-text);
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      padding: 0.15rem 0.65rem;
+      border-radius: 10px;
+    }
+
+    .post-card-title {
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+    }
+
+    .post-card-title:hover {
+      color: var(--btn-text);
+      text-decoration: underline;
+    }
+
+    .post-card-excerpt {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag-chip {
+      background: rgba(125, 107, 99, 0.1);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .tag-chip:hover {
+      background: var(--btn-bg);
+      color: var(--text-primary);
+    }
+
+    .post-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px dashed var(--card-border);
+      padding-top: 0.8rem;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      border-radius: 8px;
+      transition: color 0.2s;
+    }
+
+    .icon-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .bookmark-btn.active {
+      color: #f59e0b;
+    }
+
+    /* Modal Article Reader */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--modal-bg);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .modal-cover-img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      border: 2px solid var(--card-border);
+    }
+
+    .reading-progress-container {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: var(--card-border);
+      border-radius: 3px;
+      margin-bottom: 1rem;
+    }
+
+    .reading-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #2563eb;
+      border-radius: 3px;
+      transition: width 0.1s ease;
+    }
+
+    .close-modal-btn {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .modal-article-body {
+      margin: 1.5rem 0;
+      font-size: 1.2rem;
+      white-space: pre-line;
+      color: var(--text-primary);
+    }
+
+    /* Comments Section */
+    .comments-section {
+      margin-top: 2rem;
+      border-top: 2px dashed var(--card-border);
+      padding-top: 1.5rem;
+    }
+
+    .comment-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .comment-author {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .comment-date {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--text-primary);
+      color: var(--modal-bg);
+      padding: 0.8rem 1.4rem;
+      border-radius: 14px;
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-md);
+      display: none;
+      z-index: 2000;
+    }
+
+    /* Add Post Form */
+    .add-post-card {
+      background: var(--card-bg);
+      border: 2px dashed var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--card-bg);
+        flex-direction: column;
+        padding: 1.2rem;
+        border-bottom: 2px dashed var(--card-border);
+        display: none;
+      }
+
+      .nav-menu.active {
+        display: flex;
+      }
+
+      .nav-toggle {
+        display: flex;
+      }
+
+      .hero-title {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Navbar Header -->
+  <header class="navbar-header">
+    <nav class="navbar-container">
+      <a class="navbar-logo" onclick="switchView('home')">
+        <span>👨‍💻ブログ</span>
+      </a>
+      
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a class="nav-link active" onclick="switchView('home')">Home</a></li>
+        <li><a class="nav-link" onclick="switchView('blog')">Blog</a></li>
+        <li><a class="nav-link" onclick="switchView('projects')">Projects</a></li>
+        <li><a class="nav-link" onclick="switchView('about')">About</a></li>
+        <li>
+          <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">
+            🌙 Dark
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Content Area -->
+  <main>
+
+    <!-- HOME VIEW -->
+    <section id="view-home" class="view-section active">
+      <div class="hero-card">
+        <span class="hero-badge">👋 Welcome to my Blog!</span>
+        <h1 class="hero-title">I'm  sharing thoughts on Tech, Travel, Gaming & Food!</h1>
+        <p class="hero-description">
+          <!-- Explore articles on software development, gaming setups, travel itineraries, local food reviews, and technology trends. -->
+        </p>
+        
+        <div class="tech-chips">
+          <span class="tech-chip">💻 Tech & Code</span>
+          <span class="tech-chip">✈️ Travel Guides</span>
+          <span class="tech-chip">🍜 Food Reviews</span>
+          <span class="tech-chip">🎮 Gaming Tech</span>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <button class="btn" onclick="switchView('blog')">📖 Read All Articles</button>
+          <button class="btn btn-secondary" onclick="switchView('projects')">📂 View Projects</button>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="summary-bar">
+        <div class="stat-card">
+          <div class="stat-number" id="statTotalPosts">0</div>
+          <div class="stat-label">Articles Published</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statTotalSaved">0</div>
+          <div class="stat-label">Saved Bookmarks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statTotalLikes">0</div>
+          <div class="stat-label">Total Heart Likes</div>
+        </div>
+      </div>
+
+      <!-- Recent Articles Section -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="font-size: 2rem;">Recent Blog Articles</h2>
+        <a style="font-family: var(--font-heading); font-size: 1.2rem; cursor: pointer; color: var(--text-secondary);" onclick="switchView('blog')">View all &rarr;</a>
+      </div>
+
+      <div class="posts-grid" id="recentPostsGrid"></div>
+    </section>
+
+    <!-- BLOG VIEW -->
+    <section id="view-blog" class="view-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 2.2rem;">Blog Articles</h2>
+          <p style="color: var(--text-secondary);">Explore full tutorials, coding guides, and development notes.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn" onclick="toggleAddPostForm()">+ Write New Article</button>
+          <button class="btn btn-secondary" onclick="exportData()">💾 Backup</button>
+        </div>
+      </div>
+
+      <!-- Add New Article Card -->
+      <div id="addPostCard" class="add-post-card" style="display: none;">
+        <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Create a New Article</h3>
+        <form onsubmit="handleAddNewPost(event)">
+          <div class="form-group">
+            <label for="postTitle">Title</label>
+            <input type="text" id="postTitle" class="form-control" placeholder="e.g., A Weekend Guide to Kyoto's Hidden Cafes" required>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div class="form-group">
+              <label for="postCategory">Category</label>
+              <select id="postCategory" class="form-control">
+                <option value="Travel">Travel</option>
+                <option value="Food">Food</option>
+                <option value="Gaming">Gaming</option>
+                <option value="Technology">Technology</option>
+                <option value="React">React</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="CSS/Design">CSS/Design</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="postImage">Cover Image URL</label>
+              <input type="url" id="postImage" class="form-control" placeholder="https://images.unsplash.com/..." required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="postTags">Tags (comma separated)</label>
+            <input type="text" id="postTags" class="form-control" placeholder="e.g., travel, japan, ramen">
+          </div>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div class="form-group">
+              <label for="postCategory">Category</label>
+              <select id="postCategory" class="form-control">
+                <option value="React">React</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="CSS/Design">CSS/Design</option>
+                <option value="Tutorial">Tutorial</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="postTags">Tags (comma separated)</label>
+              <input type="text" id="postTags" class="form-control" placeholder="e.g., hooks, state, ui">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="postExcerpt">Excerpt / Short Summary</label>
+            <input type="text" id="postExcerpt" class="form-control" placeholder="Brief summary for card display..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="postContent">Full Content</label>
+            <textarea id="postContent" class="form-control" rows="6" placeholder="Write full article body here..." oninput="updateWordCount()" required></textarea>
+            <small id="wordCountCounter" style="color: var(--text-muted); font-size: 0.9rem;">0 words | ~0 min read</small>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="postPinned"> 📌 Pin this article to top
+            </label>
+          </div>
+
+          <div style="display: flex; gap: 0.8rem;">
+            <button type="submit" class="btn">Publish Article</button>
+            <button type="button" class="btn btn-secondary" onclick="toggleAddPostForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Controls & Search -->
+      <div class="controls-wrapper">
+        <div class="search-box">
+          <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search articles or tags..." oninput="renderBlogPostsGrid()">
+        </div>
+
+        <div class="filter-group">
+          <span style="font-family: var(--font-heading); color: var(--text-secondary);">Sort:</span>
+          <select id="sortSelect" class="select-input" style="width: auto;" onchange="renderBlogPostsGrid()">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="likes">Most Liked</option>
+          </select>
+
+          <button class="filter-btn active" onclick="setCategoryFilter('All', this)">All</button>
+          <button class="filter-btn" onclick="setCategoryFilter('Travel', this)">✈️ Travel</button>
+          <button class="filter-btn" onclick="setCategoryFilter('Food', this)">🍜 Food</button>
+          <button class="filter-btn" onclick="setCategoryFilter('Gaming', this)">🎮 Gaming</button>
+          <button class="filter-btn" onclick="setCategoryFilter('Technology', this)">💻 Tech</button>
+          <button class="filter-btn" id="savedFilterBtn" onclick="toggleSavedOnly(this)">🔖 Saved Only</button>
+        </div>
+      </div>
+
+      <!-- Blog Posts Grid -->
+      <div class="posts-grid" id="blogPostsGrid"></div>
+    </section>
+
+    <!-- PROJECTS VIEW -->
+    <section id="view-projects" class="view-section">
+      <h2 style="font-size: 2.2rem; margin-bottom: 0.5rem;">Projects</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Recent web applications and open-source tools created by Avinash.</p>
+
+      <div class="posts-grid">
+        <div class="post-card">
+          <div>
+            <div class="category-badge" style="width: fit-content; margin-bottom: 0.5rem;">Web App</div>
+            <h3 class="post-card-title">Interactive Portfolio & Blog</h3>
+            <p class="post-card-excerpt">A full-featured single-page blog application with LocalStorage persistence, comment threads, article reader modal, and dynamic filtering.</p>
+          </div>
+          <div class="post-card-footer">
+            <span class="post-meta">Tech: HTML, CSS, JS</span>
+            <button class="btn btn-sm" onclick="switchView('blog')">Live Demo</button>
+          </div>
+        </div>
+
+        <div class="post-card">
+          <div>
+            <div class="category-badge" style="width: fit-content; margin-bottom: 0.5rem;">React Tool</div>
+            <h3 class="post-card-title">UI Component Library</h3>
+            <p class="post-card-excerpt">A light-weight set of casual, accessible UI components built with React and CSS modules.</p>
+          </div>
+          <div class="post-card-footer">
+            <span class="post-meta">Tech: React, Storybook</span>
+            <button class="btn btn-sm" onclick="showToast('Project repository link copied!')">Source</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT VIEW -->
+    <section id="view-about" class="view-section">
+      <div class="hero-card">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">About Avinash</h2>
+        <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Hi there! I'm Avinash, a front-end engineer passionate about modern web technologies, UI design, and building clean web software.
+        </p>
+        <p style="font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          When I'm not writing JavaScript or styling CSS layouts, I enjoy blogging about web architecture, learning new tools, and contributing to developer communities.
+        </p>
+        <div style="display: flex; gap: 1rem;">
+          <button class="btn" onclick="showToast('Contact email: avinash@example.com')">📫 Contact Me</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Article Reader Modal -->
+  <div class="modal-overlay" id="articleModal">
+    <div class="modal-content" onscroll="updateReadingProgress(this)">
+      <div class="reading-progress-container">
+        <div class="reading-progress-bar" id="progressBar"></div>
+      </div>
+
+      <button class="close-modal-btn" onclick="closeArticleModal()">&times;</button>
+      
+      <img id="modalCoverImg" class="modal-cover-img" src="" alt="Cover Image">
+
+      <div class="post-card-header" style="margin-bottom: 0.8rem;">
+        <span class="category-badge" id="modalCategory">Category</span>
+        <span class="post-meta" id="modalMeta">Date • 3 min read</span>
+      </div>
+
+      <h1 class="hero-title" id="modalTitle" style="font-size: 2.2rem; margin-bottom: 0.5rem;">Article Title</h1>
+      
+      <div class="card-tags" id="modalTags"></div>
+
+      <div class="modal-article-body" id="modalBody"></div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 2px dashed var(--card-border); padding-top: 1rem; margin-top: 2rem;">
+        <button class="btn" id="modalLikeBtn" onclick="likeCurrentArticle()">
+          ❤️ <span id="modalLikeCount">0</span> Likes
+        </button>
+        <button class="btn btn-secondary" onclick="shareArticle()">🔗 Share Article</button>
+      </div>
+
+      <!-- Comments Section -->
+      <div class="comments-section">
+        <h3 style="font-size: 1.6rem; margin-bottom: 1rem;">Comments</h3>
+        <div id="modalCommentsList"></div>
+
+        <form onsubmit="handleAddComment(event)" style="margin-top: 1rem;">
+          <div class="form-group">
+            <input type="text" id="commentAuthor" class="form-control" placeholder="Your Name" required>
+          </div>
+          <div class="form-group">
+            <textarea id="commentText" class="form-control" rows="3" placeholder="Leave a comment..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-sm">Post Comment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Notification message</div>
+
+  <script>
+    // Expanded Default Blog Data with Images & Multi-Topic Content
+    const defaultPosts = [
+      {
+        id: 1,
+        title: "Exploring Tokyo's Hidden Alleyway Ramen Shops",
+        category: "Food",
+        image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
+        date: "Oct 24, 2026",
+        excerpt: "A food lover's journey into Tokyo's best secret ramen joints, rich broths, and handcrafted noodles.",
+        content: `Tokyo's culinary scene is famous for high-end Michelin dining, but the real soul of its cuisine lies in tiny 6-seater ramen bars tucked away in narrow side alleys.\n\nFrom rich, slow-simmered Tonkotsu bone broths in Shinjuku to delicate Shoyu ramen made with artisanal soy sauce, every bowl tells a story.\n\nPro Tip: Always look for ticket vending machines outside the door—that's how you know you've found an authentic local staple!`,
+        tags: ["food", "tokyo", "japan", "ramen"],
+        likes: 24,
+        pinned: true,
+        comments: [
+          { author: "Kenji", date: "Oct 25, 2026", text: "Shinjuku Golden Gai has the best hidden ramen spots!" }
+        ]
+      },
+      {
+        id: 2,
+        title: "A Weekend Adventure Hiking Mt. Fuji & Lake Kawaguchiko",
+        category: "Travel",
+        image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80",
+        date: "Oct 20, 2026",
+        excerpt: "Essential tips, photography spots, and hiking guides for visiting Mount Fuji during autumn.",
+        content: `Visiting Mount Fuji in autumn offers breathtaking views of maple leaves surrounding Lake Kawaguchiko.\n\nKey Highlights:\n1. Rent a bicycle to ride around Lake Kawaguchiko.\n2. Visit Chureito Pagoda for the iconic postcard view.\n3. Stay at a traditional Onsen ryokan for hot springs and local Kaiseki dinners.`,
+        tags: ["travel", "fuji", "nature", "japan"],
+        likes: 19,
+        pinned: false,
+        comments: []
+      },
+      {
+        id: 3,
+        title: "Building the Ultimate Minimalist PC Gaming Setup",
+        category: "Gaming",
+        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80",
+        date: "Oct 15, 2026",
+        excerpt: "How to choose ultra-wide monitors, mechanical keyboards, ambient lightning, and desk cable management.",
+        content: `A clean gaming desk setup boosts both immersion and productivity. In this guide, we break down cable management channels, monitor arm mounts, custom mechanical switches, and diffused RGB ambient lighting that reduces eye strain during long evening sessions.`,
+        tags: ["gaming", "pcbuild", "setup", "tech"],
+        likes: 31,
+        pinned: false,
+        comments: []
+      },
+      {
+        id: 4,
+        title: "AI Development Tools & The Future of Web Engineering",
+        category: "Technology",
+        image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+        date: "Oct 12, 2026",
+        excerpt: "How generative AI, code assistants, and modern web frameworks are reshaping software development.",
+        content: `Modern software engineering is evolving faster than ever. AI coding assistants are streamlining boilerplate generation, allowing developers to focus more on system architecture, UX performance, and real-time user experiences.`,
+        tags: ["technology", "ai", "webdev", "software"],
+        likes: 22,
+        pinned: false,
+        comments: []
+      },
+      {
+        id: 5,
+        title: "Building Scalable React Interfaces with Modern Hooks",
+        category: "React",
+        image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
+        date: "Oct 10, 2026",
+        excerpt: "An in-depth study of custom React hooks, state isolation, and UI performance optimizations.",
+        content: `React hooks have revolutionized how we structure component state. By isolating business logic into reusable custom hooks, we keep our UI components clean and purely declarative.`,
+        tags: ["react", "hooks", "javascript"],
+        likes: 14,
+        pinned: false,
+        comments: []
+      }
+    ];
+
+    let blogPosts = JSON.parse(localStorage.getItem('avinash_blog_posts_v2')) || defaultPosts;
+    let savedBookmarks = JSON.parse(localStorage.getItem('avinash_blog_saved')) || [];
+    let currentCategory = 'All';
+    let showSavedOnly = false;
+    let activeArticleId = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const navToggle = document.getElementById("navToggle");
+      const navMenu = document.getElementById("navMenu");
+
+      navToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("active");
+      });
+
+      renderAll();
+    });
+
+    // Theme Switcher
+    function toggleTheme() {
+      const body = document.body;
+      const themeBtn = document.getElementById('themeBtn');
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.removeAttribute('data-theme');
+        themeBtn.innerHTML = '🌙 Dark';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        themeBtn.innerHTML = '☀️ Light';
+      }
+    }
+
+    // View Switching
+    function switchView(viewName) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById(`view-${viewName}`).classList.add('active');
+
+      document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+      const activeNav = Array.from(document.querySelectorAll('.nav-link')).find(el => el.textContent.toLowerCase().includes(viewName));
+      if (activeNav) activeNav.classList.add('active');
+
+      document.getElementById('navMenu').classList.remove('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Word Counter Helper
+    function updateWordCount() {
+      const text = document.getElementById('postContent').value.trim();
+      const words = text ? text.split(/\s+/).length : 0;
+      const readTime = Math.max(1, Math.ceil(words / 150));
+      document.getElementById('wordCountCounter').textContent = `${words} words | ~${readTime} min read`;
+    }
+
+    // Add Post Form Toggle
+    function toggleAddPostForm() {
+      const card = document.getElementById('addPostCard');
+      card.style.display = card.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function handleAddNewPost(e) {
+      e.preventDefault();
+      const title = document.getElementById('postTitle').value.trim();
+      const category = document.getElementById('postCategory').value;
+      const image = document.getElementById('postImage').value.trim();
+      const tags = document.getElementById('postTags').value.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+      const excerpt = document.getElementById('postExcerpt').value.trim();
+      const content = document.getElementById('postContent').value.trim();
+      const pinned = document.getElementById('postPinned').checked;
+
+      const newPost = {
+        id: Date.now(),
+        title,
+        category,
+        image: image || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80",
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        excerpt,
+        content,
+        tags,
+        likes: 0,
+        pinned,
+        comments: []
+      };
+
+      blogPosts.unshift(newPost);
+      savePosts();
+      e.target.reset();
+      toggleAddPostForm();
+      renderAll();
+      showToast('Article published successfully!');
+    }
+
+    // Filter and Sort Actions
+    function setCategoryFilter(category, btn) {
+      currentCategory = category;
+      document.querySelectorAll('.filter-group .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderBlogPostsGrid();
+    }
+
+    function toggleSavedOnly(btn) {
+      showSavedOnly = !showSavedOnly;
+      btn.classList.toggle('active', showSavedOnly);
+      renderBlogPostsGrid();
+    }
+
+    function toggleBookmark(id, event) {
+      event.stopPropagation();
+      if (savedBookmarks.includes(id)) {
+        savedBookmarks = savedBookmarks.filter(b => b !== id);
+        showToast('Removed from saved bookmarks');
+      } else {
+        savedBookmarks.push(id);
+        showToast('Saved to bookmarks 🔖');
+      }
+      localStorage.setItem('avinash_blog_saved', JSON.stringify(savedBookmarks));
+      renderAll();
+    }
+
+    function deletePost(id, event) {
+      event.stopPropagation();
+      if (confirm('Delete this article?')) {
+        blogPosts = blogPosts.filter(p => p.id !== id);
+        savePosts();
+        renderAll();
+        showToast('Article deleted');
+      }
+    }
+
+    // Modal Article Reader
+    function openArticleModal(id) {
+      const post = blogPosts.find(p => p.id === id);
+      if (!post) return;
+
+      activeArticleId = id;
+      document.getElementById('modalTitle').textContent = post.title;
+      document.getElementById('modalCategory').textContent = post.category;
+      document.getElementById('modalCoverImg').src = post.image;
+      
+      const words = post.content ? post.content.split(/\s+/).length : 0;
+      const readTime = Math.max(1, Math.ceil(words / 150));
+      document.getElementById('modalMeta').textContent = `${post.date} • ~${readTime} min read`;
+
+      document.getElementById('modalBody').textContent = post.content;
+      document.getElementById('modalLikeCount').textContent = post.likes || 0;
+
+      const tagsContainer = document.getElementById('modalTags');
+      tagsContainer.innerHTML = (post.tags || []).map(t => `<span class="tag-chip">#${t}</span>`).join('');
+
+      renderModalComments(post);
+
+      document.getElementById('articleModal').classList.add('active');
+      document.getElementById('progressBar').style.width = '0%';
+    }
+
+    function closeArticleModal() {
+      document.getElementById('articleModal').classList.remove('active');
+      activeArticleId = null;
+    }
+
+    function updateReadingProgress(modalContent) {
+      const totalHeight = modalContent.scrollHeight - modalContent.clientHeight;
+      if (totalHeight > 0) {
+        const progress = (modalContent.scrollTop / totalHeight) * 100;
+        document.getElementById('progressBar').style.width = `${progress}%`;
+      }
+    }
+
+    function likeCurrentArticle() {
+      if (!activeArticleId) return;
+      const post = blogPosts.find(p => p.id === activeArticleId);
+      if (post) {
+        post.likes = (post.likes || 0) + 1;
+        document.getElementById('modalLikeCount').textContent = post.likes;
+        savePosts();
+        renderAll();
+        showToast('Thanks for liking! ❤️');
+      }
+    }
+
+    function handleAddComment(e) {
+      e.preventDefault();
+      if (!activeArticleId) return;
+
+      const author = document.getElementById('commentAuthor').value.trim();
+      const text = document.getElementById('commentText').value.trim();
+      const post = blogPosts.find(p => p.id === activeArticleId);
+
+      if (post && author && text) {
+        if (!post.comments) post.comments = [];
+        post.comments.push({
+          author,
+          text,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        });
+        savePosts();
+        renderModalComments(post);
+        e.target.reset();
+        showToast('Comment posted!');
+      }
+    }
+
+    function renderModalComments(post) {
+      const list = document.getElementById('modalCommentsList');
+      if (!post.comments || !post.comments.length) {
+        list.innerHTML = `<p style="color: var(--text-muted);">No comments yet. Be the first!</p>`;
+        return;
+      }
+      list.innerHTML = post.comments.map(c => `
+        <div class="comment-card">
+          <div class="comment-author">${c.author} <span class="comment-date">• ${c.date}</span></div>
+          <div style="color: var(--text-primary); margin-top: 0.2rem;">${c.text}</div>
+        </div>
+      `).join('');
+    }
+
+    // Render Helpers
+    function renderAll() {
+      updateStats();
+      renderRecentPosts();
+      renderBlogPostsGrid();
+    }
+
+    function updateStats() {
+      document.getElementById('statTotalPosts').textContent = blogPosts.length;
+      document.getElementById('statTotalSaved').textContent = savedBookmarks.length;
+      const totalLikes = blogPosts.reduce((acc, p) => acc + (p.likes || 0), 0);
+      document.getElementById('statTotalLikes').textContent = totalLikes;
+    }
+
+    function renderRecentPosts() {
+      const grid = document.getElementById('recentPostsGrid');
+      const recent = blogPosts.slice(0, 2);
+      grid.innerHTML = recent.map(p => createCardHTML(p)).join('');
+    }
+
+    function renderBlogPostsGrid() {
+      const grid = document.getElementById('blogPostsGrid');
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const sort = document.getElementById('sortSelect').value;
+
+      let filtered = blogPosts.filter(p => {
+        const matchesCat = currentCategory === 'All' || p.category === currentCategory;
+        const matchesSaved = !showSavedOnly || savedBookmarks.includes(p.id);
+        const matchesSearch = p.title.toLowerCase().includes(search) || 
+                              p.excerpt.toLowerCase().includes(search) ||
+                              (p.tags && p.tags.some(t => t.includes(search)));
+        return matchesCat && matchesSaved && matchesSearch;
+      });
+
+      // Sorting
+      filtered.sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+
+        if (sort === 'oldest') return a.id - b.id;
+        if (sort === 'likes') return (b.likes || 0) - (a.likes || 0);
+        return b.id - a.id; // newest
+      });
+
+      if (!filtered.length) {
+        grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1/-1;">No matching articles found.</p>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => createCardHTML(p)).join('');
+    }
+
+    function createCardHTML(post) {
+      const isSaved = savedBookmarks.includes(post.id);
+      return `
+        <div class="post-card ${post.pinned ? 'pinned' : ''}">
+          ${post.pinned ? '<span class="pin-badge">📌 Featured</span>' : ''}
+          <img src="${post.image}" class="card-cover-img" alt="${post.title}" onclick="openArticleModal(${post.id})">
+          <div class="card-body-content">
+            <div class="post-card-header">
+              <span class="category-badge">${post.category}</span>
+              <span class="post-meta">${post.date}</span>
+            </div>
+            <h3 class="post-card-title" onclick="openArticleModal(${post.id})">${post.title}</h3>
+            <p class="post-card-excerpt">${post.excerpt}</p>
+            <div class="card-tags">
+              ${(post.tags || []).map(t => `<span class="tag-chip" onclick="filterByTag('${t}')">#${t}</span>`).join('')}
+            </div>
+          </div>
+          <div class="post-card-footer">
+            <button class="btn btn-sm" onclick="openArticleModal(${post.id})">Read article &rarr;</button>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <button class="icon-btn bookmark-btn ${isSaved ? 'active' : ''}" onclick="toggleBookmark(${post.id}, event)" title="Save Bookmark">
+                ${isSaved ? '🔖' : '📑'}
+              </button>
+              <button class="icon-btn" onclick="deletePost(${post.id}, event)" title="Delete Article">🗑️</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function filterByTag(tag) {
+      document.getElementById('searchInput').value = tag;
+      renderBlogPostsGrid();
+    }
+
+    function savePosts() {
+      localStorage.setItem('avinash_blog_posts_v2', JSON.stringify(blogPosts));
+    }
+
+    function filterByTag(tag) {
+      document.getElementById('searchInput').value = tag;
+      renderBlogPostsGrid();
+    }
+
+    function savePosts() {
+      localStorage.setItem('avinash_blog_posts', JSON.stringify(blogPosts));
+    }
+
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(blogPosts, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "avinash_blog_backup.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('Backup downloaded! 💾');
+    }
+
+    function shareArticle() {
+      navigator.clipboard.writeText(window.location.href);
+      showToast('Article link copied to clipboard! 🔗');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

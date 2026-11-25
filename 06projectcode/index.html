@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean Portfolio & Blog</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navbar Header -->
+  <header class="navbar-header">
+    <nav class="navbar-container">
+      <a class="navbar-logo" onclick="switchView('home')">BLOG</a>
+      
+      <!-- Mobile Menu Toggle Button -->
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+
+      <!-- Navigation Links -->
+      <ul class="nav-menu" id="navMenu">
+        <li><a class="nav-link active" onclick="switchView('home')">Home</a></li>
+        <li><a class="nav-link" onclick="switchView('about')">About</a></li>
+        <li><a class="nav-link" onclick="switchView('projects')">Projects</a></li>
+        <li><a class="nav-link" onclick="switchView('blog')">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Content Views -->
+  <main>
+    <!-- HOME VIEW (#view-home) -->
+    <section id="view-home" class="view-section active">
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <span class="hero-badge"></span>
+        <h1 class="hero-title">hello</h1>
+        <p class="hero-description">
+          A passionate Web Developer building clean, responsive, and functional digital experiences using modern web technologies.
+        </p>
+        <div class="hero-actions">
+          <!-- <button class="btn" onclick="switchView('projects')">View Projects</button> -->
+          <button class="btn btn-secondary" onclick="switchView('blog')">Read Blog</button>
+        </div>
+      </div>
+
+      <!-- Recent Posts Preview (Latest 2 articles) -->
+      <div class="recent-posts-container">
+        <div class="section-header">
+          <h2 class="section-title">Recent Blogs</h2>
+          <a class="view-all-link" onclick="switchView('blog')">View all &rarr;</a>
+        </div>
+        <div class="posts-grid" id="recentPostsGrid">
+          <!-- Dynamically populated via JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- OTHER VIEWS PLACEHOLDERS -->
+    <section id="view-about" class="view-section">
+      <h2>About Me</h2>
+      <p style="margin-top: 1rem; color: #4b5563;">Passionate developer based in Tokyo, Japan, specializing in building responsive web applications.</p>
+    </section>
+
+    <section id="view-projects" class="view-section">
+      <h2>Projects</h2>
+      <p style="margin-top: 1rem; color: #4b5563;">Explore my recent web development and engineering projects.</p>
+    </section>
+
+    <!-- BLOG VIEW (#view-blog) -->
+    <section id="view-blog" class="view-section">
+      <div class="blog-header-row">
+        <h2>Blog Articles</h2>
+        <button class="btn" onclick="toggleAddPostForm()">+ Add New Post</button>
+      </div>
+
+      <!-- Add New Post Form (Collapsible) -->
+      <div id="addPostFormCard" class="add-post-form-card" style="display: none;">
+        <h3>Create a New Blog Post</h3>
+        <form onsubmit="handleAddNewPost(event)">
+          <div class="form-group">
+            <label for="postTitle">Post Title</label>
+            <input type="text" id="postTitle" required placeholder="e.g., Understanding React Hooks">
+          </div>
+          <div class="form-group">
+            <label for="postCategory">Category</label>
+            <select id="postCategory">
+              <option value="React">React</option>
+              <option value="JavaScript">JavaScript</option>
+              <option value="Design">Design</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="postExcerpt">Excerpt / Summary</label>
+            <textarea id="postExcerpt" rows="3" required placeholder="Write a short summary of your article..."></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn">Publish Article</button>
+            <button type="button" class="btn btn-secondary" onclick="toggleAddPostForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Search Bar & Category Filters -->
+      <div class="blog-controls">
+        <input type="text" id="blogSearchInput" class="search-input" placeholder="Search by title or excerpt..." oninput="handleSearch()">
+        
+        <div class="category-filters" id="categoryFilters">
+          <button class="filter-btn active" onclick="filterByCategory('All', this)">All</button>
+          <button class="filter-btn" onclick="filterByCategory('React', this)">React</button>
+          <button class="filter-btn" onclick="filterByCategory('JavaScript', this)">JavaScript</button>
+          <button class="filter-btn" onclick="filterByCategory('Design', this)">Design</button>
+        </div>
+      </div>
+
+      <!-- Blog Posts Grid -->
+      <div class="posts-grid" id="blogPostsGrid">
+        <!-- Dynamically populated via JavaScript -->
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
